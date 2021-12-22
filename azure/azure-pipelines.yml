@@ -34,6 +34,21 @@ stages:
                 command: ci
                 verbose: false
             timeoutInMinutes: 5
+          -   bash: echo "##[debug]Sources directory" && ls -al $(Build.SourcesDirectory)/*
+          -   task: CopyFiles@2
+              displayName: 'Copy files'
+              inputs:
+                  SourceFolder: $(Build.SourcesDirectory)
+                  Contents: |
+                      **/*
+                      !**/.git/**/*
+                  TargetFolder: $(Build.ArtifactStagingDirectory)
+          - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
+          - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactStagingDirectory)/*
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: $(Build.ArtifactStagingDirectory)
+              includeRootFoulder: false
 
     - stage: Package
       displayName: Package
@@ -43,21 +58,10 @@ stages:
           - job: package
             steps:
             - checkout: none
-            -   bash: echo "##[debug]Sources directory" && ls -al $(Build.SourcesDirectory)/*
-            -   task: CopyFiles@2
-                displayName: 'Copy files'
-                inputs:
-                    SourceFolder: $(Build.SourcesDirectory)
-                    Contents: |
-                        **/*
-                        !**/.git/**/*
-                    TargetFolder: $(Build.ArtifactStagingDirectory)
-            - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
-            - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactStagingDirectory)/*
-            - task: ArchiveFiles@2
-              inputs:
-                rootFolderOrFile: $(Build.ArtifactStagingDirectory)
-                includeRootFoulder: false
+            -   task: DownloadPipelineArtifact@1
+                      inputs:
+                          downloadPath: $(System.DefaultWorkingDirectory)
+            -   bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
             - task: PublishPipelineArtifact@0
               inputs:
                 targetPath: $(System.ArtifactsDirectory)
