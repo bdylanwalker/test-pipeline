@@ -40,9 +40,9 @@ stages:
       pool:
           vmImage: 'ubuntu-latest'
       jobs:
-          - checkout: none
           - job: package
             steps:
+            - checkout: none
             - task: ArchiveFiles@2
               inputs:
                 rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
@@ -56,9 +56,9 @@ stages:
       pool:
           vmImage: 'ubuntu-latest'
       jobs:
-          - checkout: none
           - job: deploy
             steps:
+            - checkout: none
             - task: DownloadPipelineArtifact@1
               inputs:
                 downloadPath: '$(System.DefaultWorkingDirectory)'
