@@ -49,6 +49,9 @@ stages:
             inputs:
               rootFolderOrFile: $(Build.ArtifactStagingDirectory)
               includeRootFoulder: false
+          - task: PublishPipelineArtifact@0
+            inputs:
+                targetPath: $(System.ArtifactsDirectory)
 
     - stage: Package
       displayName: Package
