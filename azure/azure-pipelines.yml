@@ -20,20 +20,20 @@ stages:
       jobs:
         - job: compile
           steps:
-              - checkout: self
-                clean: true
-                persistCredentials: true
-                fetchDepth: 1
-              - task: NodeTool@0
-                displayName: 'Use Node 16 LTS'
-                inputs:
-                   versionSpec: '16.13.1'
-              - task: Npm@1
-                displayName: 'npm install'
-                inputs:
-                    command: ci
-                    verbose: false
-                timeoutInMinutes: 5
+          - checkout: self
+            clean: true
+            persistCredentials: true
+            fetchDepth: 1
+          - task: NodeTool@0
+            displayName: 'Use Node 16 LTS'
+            inputs:
+               versionSpec: '16.13.1'
+          - task: Npm@1
+            displayName: 'npm install'
+            inputs:
+                command: ci
+                verbose: false
+            timeoutInMinutes: 5
 
     - stage: Package
       displayName: Package
@@ -42,11 +42,11 @@ stages:
       jobs:
           - job: package
             steps:
-          - task: ArchiveFiles@2
-            inputs:
+            - task: ArchiveFiles@2
+              inputs:
                 rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
                 includeRootFoulder: false
-          -   task: PublishPipelineArtifact@0
+            - task: PublishPipelineArtifact@0
               inputs:
                 targetPath: '$(System.ArtifactsDirectory)'
 
