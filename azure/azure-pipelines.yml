@@ -66,7 +66,6 @@ stages:
                         - task: DownloadPipelineArtifact@1
                           inputs:
                             downloadPath: $(System.DefaultWorkingDirectory)
-                        - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
                         - task: GithubRelease@1
                           displayName: 'Create GitHub Release'
                           inputs:
@@ -75,6 +74,4 @@ stages:
                               tagSource: userSpecifiedTag
                               tag: release-$(Build.BuildNumber)
                               assets: $(Build.DefaultWorkingDirectory)/**/*.zip
-                        -   bash: echo "##[debug]Artifact staging directory" && ls -al $(System.ArtifactStagingDirectory)/*
-
 
