@@ -43,15 +43,24 @@ stages:
           - job: package
             steps:
             - checkout: none
+            -   bash: echo "##[debug]Sources directory" && ls -al $(Build.SourcesDirectory)/*
+            -   task: CopyFiles@2
+                displayName: 'Copy files'
+                inputs:
+                    SourceFolder: $(Build.SourcesDirectory)
+                    Contents: |
+                        **/*
+                        !**/.git/**/*
+                    TargetFolder: $(Build.ArtifactStagingDirectory)
             - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
             - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactStagingDirectory)/*
             - task: ArchiveFiles@2
               inputs:
-                rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+                rootFolderOrFile: $(Build.ArtifactStagingDirectory)
                 includeRootFoulder: false
             - task: PublishPipelineArtifact@0
               inputs:
-                targetPath: '$(System.ArtifactsDirectory)'
+                targetPath: $(System.ArtifactsDirectory)
             - bash: echo "##[debug]Artifacts directory" && ls -al $(System.ArtifactsDirectory)/*
 
     - stage: Deploy
@@ -69,7 +78,7 @@ stages:
                         - checkout: none
                         - task: DownloadPipelineArtifact@1
                           inputs:
-                            downloadPath: '$(System.DefaultWorkingDirectory)'
+                            downloadPath: $(System.DefaultWorkingDirectory)
                         - bash: ls -al $(System.DefaultWorkingDirectory)/*
                         - task: GithubRelease@1
                           displayName: 'Create GitHub Release'
