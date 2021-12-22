@@ -23,7 +23,7 @@ stages:
           steps:
               - checkout: self
                 clean: true
-                presistCredentials: true
+                persistCredentials: true
               - bash: echo "##[debug]BEGIN"
               - task: NodeTool@0
                 displayName: 'Use Node 16 LTS'
