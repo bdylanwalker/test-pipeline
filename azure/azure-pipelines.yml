@@ -59,7 +59,7 @@ stages:
       pool:
           vmImage: 'ubuntu-latest'
       jobs:
-          - deployment
+          - deployment: deployApp
             displayName: Deploy app
             environment: 'testpipeline-dev'
             strategy:
