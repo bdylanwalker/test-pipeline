@@ -34,21 +34,8 @@ stages:
                 command: ci
                 verbose: false
             timeoutInMinutes: 5
-          -   bash: echo "##[debug]Sources directory" && ls -al $(Build.SourcesDirectory)/*
-          -   task: CopyFiles@2
-              displayName: 'Copy files'
-              inputs:
-                  SourceFolder: $(Build.SourcesDirectory)
-                  Contents: |
-                      **/*
-                      !**/.git/**/*
-                  TargetFolder: $(Build.ArtifactStagingDirectory)
           - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
-          - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactStagingDirectory)/*
-          - task: ArchiveFiles@2
-            inputs:
-              rootFolderOrFile: $(Build.ArtifactStagingDirectory)
-              includeRootFoulder: false
+          - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactsDirectory)/*
           - task: PublishPipelineArtifact@0
             inputs:
                 targetPath: $(System.ArtifactsDirectory)
@@ -65,6 +52,10 @@ stages:
                 inputs:
                   downloadPath: $(System.DefaultWorkingDirectory)
             -   bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
+            - task: ArchiveFiles@2
+              inputs:
+                  rootFolderOrFile: $(System.DefaultWorkingDirectory)/*.zip
+                  includeRootFoulder: false
 
     - stage: Deploy
       displayName: Deploy
@@ -82,7 +73,7 @@ stages:
                         - task: DownloadPipelineArtifact@1
                           inputs:
                             downloadPath: $(System.DefaultWorkingDirectory)
-                        - bash: ls -al $(System.DefaultWorkingDirectory)/*
+                        - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
                         - task: GithubRelease@1
                           displayName: 'Create GitHub Release'
                           inputs:
@@ -90,5 +81,7 @@ stages:
                               repositoryName: bdylanwalker/test-pipeline
                               tagSource: userSpecifiedTag
                               tag: release-$(Build.BuildNumber)
-                              assets: $(Build.ArtifactStagingDirectory)/**/*.zip
+                              assets: $(Build.DefaultWorkingDirectory)/**/*.zip
+                        -   bash: echo "##[debug]Artifact staging directory" && ls -al $(System.ArtifactStagingDirectory)/*
+
 
