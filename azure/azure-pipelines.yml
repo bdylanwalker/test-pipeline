@@ -40,6 +40,7 @@ stages:
       pool:
           vmImage: 'ubuntu-latest'
       jobs:
+          - checkout: none
           - job: package
             steps:
             - task: ArchiveFiles@2
@@ -55,6 +56,7 @@ stages:
       pool:
           vmImage: 'ubuntu-latest'
       jobs:
+          - checkout: none
           - job: deploy
             steps:
             - task: DownloadPipelineArtifact@1
@@ -66,9 +68,8 @@ stages:
               inputs:
                   gitHubConnection: github.com_bdylanwalker
                   repositoryName: bdylanwalker/test-pipeline
-                  tagSource: manual
+                  tagSource: userSpecifiedTag
                   tag: release-$(Build.BuildNumber)
                   assets: $(System.DefaultWorkingDirectory)/drop/*.zip
-
 
 
