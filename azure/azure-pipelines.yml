@@ -60,13 +60,13 @@ stages:
             - task: DownloadPipelineArtifact@1
               inputs:
                 downloadPath: '$(System.DefaultWorkingDirectory)'
-            - bash: ls -al $(System.DefaultWorkingDirectory)
-#            - task: GithubRelease@1
-#              displayName: 'Create GitHub Release'
-#              inputs:
-#                  gitHubConnection: bdylanwalker
-#                  repositoryName: bdylanwalker/test-pipeline
-#                  assets: $(System.DefaultWorkingDirectory)/**/*
+            - bash: ls -al $(System.DefaultWorkingDirectory)/*
+            - task: GithubRelease@1
+              displayName: 'Create GitHub Release'
+              inputs:
+                  gitHubConnection: bdylanwalker
+                  repositoryName: bdylanwalker/test-pipeline
+                  assets: $(System.DefaultWorkingDirectory)/**/*
 
 
 
