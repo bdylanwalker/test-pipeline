@@ -12,6 +12,10 @@ variables:
 name: 1.0.$(Rev:r)
 
 stages:
+    - checkout: self
+      clean: true
+      persistCredentials: true
+      fetchDepth: 1
     - stage: Build
       displayName: Build
       pool:
@@ -20,10 +24,6 @@ stages:
       jobs:
         - job: compile
           steps:
-              - checkout: self
-                clean: true
-                persistCredentials: true
-              - bash: echo "##[debug]BEGIN"
               - task: NodeTool@0
                 displayName: 'Use Node 16 LTS'
                 inputs:
@@ -34,7 +34,6 @@ stages:
                     command: ci
                     verbose: false
                 timeoutInMinutes: 5
-              - bash: echo "##[debug]END"
 
     - stage: Package
       displayName: Package
@@ -43,8 +42,13 @@ stages:
       jobs:
           - job: package
             steps:
-                - bash: echo "##[debug]BEGIN"
-                - bash: echo "##[debug]END"
+          - task: ArchiveFiles@2
+            inputs:
+                rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+                includeRootFo
+          -   task: PublishPipelineArtifact@0
+              inputs:
+                targetPath: '$(System.ArtifactsDirectory)'
 
     - stage: Deploy
       displayName: Deploy
@@ -53,7 +57,16 @@ stages:
       jobs:
           - job: deploy
             steps:
-                - bash: echo "##[debug]BEGIN"
-                - bash: echo "##[debug]END"
+            - task: DownloadPipelineArtifact@1
+              inputs:
+                downloadPath: '$(System.DefaultWorkingDirectory)'
+            - bash: ls -al $(System.DefaultWorkingDirectory)
+#            - task: GithubRelease@1
+#              displayName: 'Create GitHub Release'
+#              inputs:
+#                  gitHubConnection: bdylanwalker
+#                  repositoryName: bdylanwalker/test-pipeline
+#                  assets: $(System.DefaultWorkingDirectory)/**/*
+
 
 
