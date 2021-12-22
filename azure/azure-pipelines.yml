@@ -11,28 +11,54 @@ stages:
     - stage: Build
       displayName: Build
       pool:
+        name: Ubuntu Pool
         vmImage: 'ubuntu-latest'
         demands: npm
-      trigger: master
+      trigger:
+        batch: true
+        branches:
+          include:
+            - master
       pr: none
       jobs:
         - job: compile
           steps:
-
-
+              - checkout: self
+                clean: true
+                presistCredentials: true
+              - bash: echo "##[debug]BEGIN"
+              - task: NodeTool@0
+                displayName: 'Use Node 16 LTS'
+                inputs:
+                   versionSpec: '16.13.1'
+              - task: Npm@1
+                displayName: 'npm install'
+                inputs:
+                    command: ci
+                    verbose: false
+                timeoutInMinutes: 5
+              - bash: echo "##[debug]END"
 
     - stage: Package
       displayName: Package
       pool:
           vmImage: 'ubuntu-latest'
       trigger: none
+      jobs:
+          - job: package
+            steps:
+                - bash: echo "##[debug]BEGIN"
+                - bash: echo "##[debug]END"
 
     - stage: Deploy
       displayName: Deploy
       pool:
           vmImage: 'ubuntu-latest'
       trigger: none
+      jobs:
+          - job: deploy
+            steps:
+                - bash: echo "##[debug]BEGIN"
+                - bash: echo "##[debug]END"
 
-steps:
-    - bash: echo "Hello, World!"
 
