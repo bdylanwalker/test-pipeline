@@ -12,10 +12,6 @@ variables:
 name: 1.0.$(Rev:r)
 
 stages:
-    - checkout: self
-      clean: true
-      persistCredentials: true
-      fetchDepth: 1
     - stage: Build
       displayName: Build
       pool:
@@ -24,6 +20,10 @@ stages:
       jobs:
         - job: compile
           steps:
+              - checkout: self
+                clean: true
+                persistCredentials: true
+                fetchDepth: 1
               - task: NodeTool@0
                 displayName: 'Use Node 16 LTS'
                 inputs:
