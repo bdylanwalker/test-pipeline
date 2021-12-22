@@ -49,10 +49,6 @@ stages:
             - task: DownloadPipelineArtifact@1
               inputs:
                 downloadPath: $(System.DefaultWorkingDirectory)
-            - task: ArchiveFiles@2
-              inputs:
-                  rootFolderOrFile: $(System.DefaultWorkingDirectory)/*.zip
-                  includeRootFoulder: false
 
     - stage: Deploy
       displayName: Deploy
