@@ -34,8 +34,6 @@ stages:
                 command: ci
                 verbose: false
             timeoutInMinutes: 5
-          - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
-          - bash: echo "##[debug]Staging directory" && ls -al $(Build.ArtifactsDirectory)/*
           - task: PublishPipelineArtifact@0
             inputs:
                 targetPath: $(System.ArtifactsDirectory)
@@ -51,7 +49,7 @@ stages:
             -   task: DownloadPipelineArtifact@1
                 inputs:
                   downloadPath: $(System.DefaultWorkingDirectory)
-            -   bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
+            - bash: echo "##[debug]Working directory" && ls -al $(System.DefaultWorkingDirectory)/*
             - task: ArchiveFiles@2
               inputs:
                   rootFolderOrFile: $(System.DefaultWorkingDirectory)/*.zip
