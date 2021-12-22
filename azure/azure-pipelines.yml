@@ -1,7 +1,4 @@
 
-pool:
-    vmImage: ubuntu-latest
-
 variables:
     system.debug: true
 
