@@ -15,7 +15,6 @@ stages:
     - stage: Build
       displayName: Build
       pool:
-        name: Ubuntu Pool
         vmImage: 'ubuntu-latest'
         demands: npm
       jobs:
