@@ -64,7 +64,7 @@ stages:
             - task: GithubRelease@1
               displayName: 'Create GitHub Release'
               inputs:
-                  gitHubConnection: bdylanwalker
+                  gitHubConnection: github.com_bdylanwalker
                   repositoryName: bdylanwalker/test-pipeline
                   assets: $(System.DefaultWorkingDirectory)/**/*
 
