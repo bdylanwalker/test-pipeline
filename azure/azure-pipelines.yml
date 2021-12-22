@@ -1,0 +1,38 @@
+
+pool:
+    vmImage: ubuntu-latest
+
+variables:
+    system.debug: true
+
+name: 1.0.$(Rev:r)
+
+stages:
+    - stage: Build
+      displayName: Build
+      pool:
+        vmImage: 'ubuntu-latest'
+        demands: npm
+      trigger: master
+      pr: none
+      jobs:
+        - job: compile
+          steps:
+
+
+
+    - stage: Package
+      displayName: Package
+      pool:
+          vmImage: 'ubuntu-latest'
+      trigger: none
+
+    - stage: Deploy
+      displayName: Deploy
+      pool:
+          vmImage: 'ubuntu-latest'
+      trigger: none
+
+steps:
+    - bash: echo "Hello, World!"
+
